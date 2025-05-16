@@ -1,0 +1,577 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<title>Procedural level generation tool</title>
+<style>
+<!--
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is too much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sidebar #content {
+        background: var(--ds-surface, #fff) !important;
+        color: var(--ds-text, #000) !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: var(--ds-link-pressed, #000);
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at end of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:DengXian;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"\@DengXian";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:24.0pt;
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:18.0pt;
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<h1>Procedural level generation tool</h1>
+
+<h2 id=Procedurallevelgenerationtool-Overview>Overview</h2>
+
+<p>The level generation uses main generator with its components (passes) to
+generate the level. Each pass is created in C++ and has a separate logic of
+what it does. If there is a need to add a pass for something (either spawning
+or modifying the existing level) please contact <a
+href="/display/~223348@buas.nl" data-username="223348@buas.nl"
+data-linked-resource-id=787410 data-linked-resource-version=1
+data-linked-resource-type=userinfo data-base-url="https://confluence.buas.nl">Łuczak,
+Franciszek (223348)</a> . In order to spawn or modify the world the generation
+passes use <a href="#Procedurallevelgenerationtool-rules">rules</a> to define
+if an operation is possible- a rule is a blueprint script, with a function that
+returns a boolean (true if an operation can be completed, false if not).</p>
+
+<p><img border=0 width=468 height=153 id="Picture 1"
+src="Procedural+level+generation+tool_files/image001.png"></p>
+
+<p><img border=0 width=283 height=243 id="Picture 2"
+src="Procedural+level+generation+tool_files/image002.png"></p>
+
+<p>Generator with its passes in the blueprint</p>
+
+<p>&nbsp;</p>
+
+<p>Each pass has a priority (an integer) it defines the order in which the
+passes are executed, the ones with the lower priority go first, the ones with
+higher priority number go last.</p>
+
+<p>&nbsp;</p>
+
+<p><img border=0 width=413 height=68 id="Picture 3"
+src="Procedural+level+generation+tool_files/image003.png"></p>
+
+<p>Priority number in the generation pass</p>
+
+<h2 id=Procedurallevelgenerationtool-Practicaldocumentation>Practical
+documentation</h2>
+
+<p>This is an overview of the generation algorithm used in our project. With it
+one should be able to become more familiar with the level generation algorithm
+and as an effect be able to create their own procedures, room templates and
+more.</p>
+
+<h2 id=Procedurallevelgenerationtool-Roomtemplates><strong>Room templates</strong></h2>
+
+<p>Room templates are the base of the generation- they are a blueprint deriving
+from an actor class. They define the shape of the room, as well as consist of
+multiple components that might be helpful for other generation passes (for
+example prop spawners). They can also have any other components attached to
+them, as well as general blueprint logic and events as any other actor would.
+The most important components inside the room templates are:</p>
+
+<p><img border=0 width=468 height=258 id="Picture 4"
+src="Procedural+level+generation+tool_files/image004.png"><img border=0
+width=468 height=428 id="Picture 5"
+src="Procedural+level+generation+tool_files/image005.png"></p>
+
+<p>Example room template with its components (left side) resulting in
+generation of a room shown on the right side + an extra room coming out of the
+exit in the middle of the room.</p>
+
+<h2 id=Procedurallevelgenerationtool-RoomExitComponent><strong>Room Exit
+Component</strong></h2>
+
+<p><b><img border=0 width=468 height=192 id="Picture 6"
+src="Procedural+level+generation+tool_files/image006.png"></b></p>
+
+<p>Example Room Exit Component component inside the room template.</p>
+
+<p>&nbsp;</p>
+
+<p>Defines where a next room can be placed from the room it is placed in. It is
+important for it to be rotated along the Z axis so that the red arrow points in
+the direction of which the next room will be spawned. Exit component's rotation
+also influences the rotation of the room that it spawns. Exit component also is
+defined by a bounding box, within it, no wall tiles will be spawned during wall
+generation pass. A room can have multiple exit components assigned.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Each room exit component also contains a list of <strong><a
+href="#Procedurallevelgenerationtool-rules">Room With Rules Objects</a> - </strong>when
+the level is generated each object assigned to the list will be checked if the
+rules are satisfied, if they are and there are no overlaps with other rooms,
+the room assigned to the object will be spawned in the place of the exit. The
+rooms are checked from top to bottom, which means that if the rules of the
+first room are satisfied, another room will not be checked and the first one
+will be spawned within the level.</p>
+
+<p><img border=0 width=468 height=106 id="Picture 7"
+src="Procedural+level+generation+tool_files/image007.png"></p>
+
+<p>&nbsp;</p>
+
+<h2 id=Procedurallevelgenerationtool-RoomEntranceComponent><strong>Room
+Entrance Component</strong></h2>
+
+<p><b><img border=0 width=468 height=146 id="Picture 8"
+src="Procedural+level+generation+tool_files/image008.png"></b></p>
+
+<p>Defines<strong> </strong>room's root position, the entrance position will
+always be the same as the position of the exit that spawns the room. <strong>Important:
+Room Entrance's position should be placed right on the edge of the floor or
+slightly inside of it to keep seamless room connections.</strong></p>
+
+<h2 id=Procedurallevelgenerationtool-RoomBoundsComponent><strong>Room Bounds
+Component</strong></h2>
+
+<p><b><img border=0 width=468 height=145 id="Picture 9"
+src="Procedural+level+generation+tool_files/image009.png"></b></p>
+
+<p>Defines collision bounds of the room inside generation, important, as it is
+the only thing preventing the room from overlapping when the level is
+generated. Every room can have multiple room bounds components which allows for
+more interesting room shapes with high fidelity collisions. In the future it
+will also be used for detecting if the player entered a room. The main values
+that can be edited for this component are: <strong>position, scale, box extent,
+rotation</strong></p>
+
+<p><b><img border=0 width=468 height=314 id="Picture 10"
+src="Procedural+level+generation+tool_files/image010.png"></b></p>
+
+<p>Example overlap checks performed by room bounds components while generating
+the level</p>
+
+<p>&nbsp;</p>
+
+<h2 id=Procedurallevelgenerationtool-ScatteredEnemySpawnerController><strong>Scattered
+Enemy Spawner Controller</strong></h2>
+
+<p>Enemies can be spawned via ScatteredEnemySpawnerController. It is a bounding
+box in which we can determine how many enemies of which grade/size we can
+spawn:</p>
+
+<p>&nbsp;</p>
+
+<p><img border=0 width=438 height=276 id="Picture 11"
+src="Procedural+level+generation+tool_files/image011.png"></p>
+
+<p>&nbsp;</p>
+
+<p>To determine which enemies can be spawned in total within the level we do it
+inside a data table with a row type set to Enemy Table Row that should be
+assigned to an enemy generation pass inside our main generator:</p>
+
+<p>&nbsp;</p>
+
+<p><img border=0 width=462 height=222 id="Picture 12"
+src="Procedural+level+generation+tool_files/image012.png"></p>
+
+<p>&nbsp;</p>
+
+<p><img border=0 width=468 height=216 id="Picture 13"
+src="Procedural+level+generation+tool_files/image013.png"></p>
+
+<p>&nbsp;</p>
+
+<p>Here we can assign:</p>
+
+<ul type=square>
+ <li class=MsoNormal>actor to be spawned</li>
+ <li class=MsoNormal>the grade of the enemy</li>
+ <li class=MsoNormal>A rule instance determining how many enemies are spawned
+     per level of this given type</li>
+</ul>
+
+<p>If everything is done correctly the spawners should generate enemies inside
+their bounds and when a certain amount of enemies is reached the enemies stop
+spawning.</p>
+
+<h2 id=Procedurallevelgenerationtool-RoomFloorComponent><strong>Room Floor
+Component</strong></h2>
+
+<p>A static mesh component with extra functionality- it calculates and stores
+vertices of a mesh provided, is used inside a wall generation pass, the walls
+will be placed along the top edges of the mesh assigned to the component. Every
+room can have multiple overlapping floor components, which allows for more
+interesting shape of the room. <strong>Important: room floor component should
+have as little vertices as possible (no bevels, no rounded edges), it should
+only define a rough shape of the floor, as well as hidden in the game and some
+more detailed mesh can be placed in its place.</strong></p>
+
+<p>&nbsp;</p>
+
+<p><b><img border=0 width=468 height=156 id="Picture 14"
+src="Procedural+level+generation+tool_files/image014.png"></b></p>
+
+<p>Example of multiple floor components placed inside a room template.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Prop Spawner Component</strong></p>
+
+<p><b><img border=0 width=468 height=179 id="Picture 15"
+src="Procedural+level+generation+tool_files/image015.png"></b></p>
+
+<p>A prop spawner component is used to define a position in which a prop is
+going to be spawned inside a level. It has a box extent for initial collision
+checking, as well as prop overlap checking (an actor with bounds bigger than
+the prop spawner cannot be spawned, also a prop cannot overlap with walls and
+other props. It uses a list of <strong>Prop With Rules </strong>Objects, where
+it checks one by one if the rules have been satisfied, if so, the first object
+with satisfied rule check will be spawned if it doesn't overlap with the
+environment and other props, as well as is within the bounds of the prop
+spawner.</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<h2 id=Procedurallevelgenerationtool-rules><strong><span
+id=Procedurallevelgenerationtool-rules></span>Rule objects</strong></h2>
+
+<p>Each object that can be spawned inside the level (room, prop, wall tile) has
+its own&nbsp;<strong>object with rules </strong>class, which is a data asset
+containing a reference to an object we want to spawn and a list of <strong>rules&nbsp;</strong>to
+spawn them. We can create the rule objects like so:&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p><img border=0 width=468 height=414 id="Picture 17"
+src="Procedural+level+generation+tool_files/image016.png"><img border=0
+width=450 height=115 id="Picture 18"
+src="Procedural+level+generation+tool_files/image017.png"></p>
+
+<p>&nbsp;</p>
+
+<p>After that we can assign our object inside the data asset and assign it to
+an object that requires it (whether it's an exit for rooms, a prop spawner with
+a prop or wall generation pass for walls).</p>
+
+<p><img border=0 width=468 height=75 id="Picture 19"
+src="Procedural+level+generation+tool_files/image018.png"></p>
+
+<p>Example room with rules data asset instance ready to be assigned to a door
+component inside a room. <strong>Worth noting: there might be multiple rule
+data assets assigned to the list, then, the rules are satisfied only if ALL of
+the rules return true.</strong></p>
+
+<h2 id=Procedurallevelgenerationtool-Rules><strong>Rules</strong></h2>
+
+<p><strong>Step 1: creating the base</strong></p>
+
+<p>For rules to assign and create their instances we first need to define a
+base rule blueprint:</p>
+
+<p><img border=0 width=468 height=781 id="Picture 20"
+src="Procedural+level+generation+tool_files/image019.png"></p>
+
+<p><img border=0 width=468 height=233 id="Picture 21"
+src="Procedural+level+generation+tool_files/image020.png"></p>
+
+<p>We should derive rules for the correct object type, it matters, as for
+example rules for props cannot be used for rooms, etc.</p>
+
+<p>Then when we create a blueprint class for a rules blueprint, we need to
+override its <strong>CheckRules </strong>method with our custom rules, by
+default the function will always return true.</p>
+
+<p><img border=0 width=453 height=102 id="Picture 22"
+src="Procedural+level+generation+tool_files/image021.png"></p>
+
+<p><img border=0 width=468 height=142 id="Picture 23"
+src="Procedural+level+generation+tool_files/image022.png"></p>
+
+<p>The most important part of this is making sure that ReturnValue is always
+returned and defines if an object can be placed correctly (true if an object
+can be placed, false if not).</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Step 2: creating the instance</strong></p>
+
+<p>The instance of the rule can be created in the same way as the instance of
+the <strong>Object With Rules:</strong></p>
+
+<p>&nbsp;</p>
+
+<p><b><img border=0 width=468 height=301 id="Picture 24"
+src="Procedural+level+generation+tool_files/image023.png"></b></p>
+
+<p>&nbsp;After pressing 'select' we have created a rule data asset that can be
+added to the <strong>Object With Rules </strong>that defines the rules of
+placing an object inside the game world during the level generation.</p>
+
+<h2 id=Procedurallevelgenerationtool-Naming><strong>Naming</strong></h2>
+
+<div>
+
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <colgroup><col><col></colgroup>
+ <tr>
+  <td style='border:solid windowtext 1.0pt;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'><b>Class</b></p>
+  </td>
+  <td style='border:solid windowtext 1.0pt;border-left:none;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'><b>Name convention</b></p>
+  </td>
+ </tr>
+ <tr style='page-break-inside:avoid'>
+  <td style='border:solid windowtext 1.0pt;border-top:none;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal>Rule Object</p>
+  </td>
+  <td style='border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;
+  border-right:solid windowtext 1.0pt;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal>DA_Name_ObjectType_Rule</p>
+  </td>
+ </tr>
+ <tr style='page-break-inside:avoid'>
+  <td style='border:solid windowtext 1.0pt;border-top:none;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal>Room Template</p>
+  </td>
+  <td style='border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;
+  border-right:solid windowtext 1.0pt;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p>BP_RoomName</p>
+  </td>
+ </tr>
+ <tr style='page-break-inside:avoid'>
+  <td style='border:solid windowtext 1.0pt;border-top:none;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal>Object with Rules Data Asset</p>
+  </td>
+  <td style='border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;
+  border-right:solid windowtext 1.0pt;padding:3.75pt 3.75pt 3.75pt 3.75pt'>
+  <p class=MsoNormal>DA_ObjectName_WithRules</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>
