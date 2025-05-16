@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "LevelGeneration",
+	"Description": "Level generation plugin for unreal engine",
+	"Category": "Other",
+	"CreatedBy": "Fluczak",
+	"CreatedByURL": "www.fluczak.site",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "LevelGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
